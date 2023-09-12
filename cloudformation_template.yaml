@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AWS CloudFormation Template for creating EC2 instances, S3 bucket, and VPC.
+
+Resources:
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.0.0/24
+      AvailabilityZone: us-east-1a
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: PublicSubnet1
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: us-east-1b
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: PublicSubnet2
+
+  Demoserver1:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-00874d747dde814fa
+      SubnetId: !Ref PublicSubnet1
+      SecurityGroupIds:
+        - sg-0db98264d493dbd53
+      KeyName: vprofile-key.pem
+      Tags:
+        - Key: Name
+          Value: Demoserver1
+
+  Demoserver2:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-00874d747dde814fa
+      SubnetId: !Ref PublicSubnet2
+      SecurityGroupIds:
+        - sg-0db98264d493dbd53
+      KeyName: vprofile-key.pem
+      Tags:
+        - Key: Name
+          Value: Demoserver2
+
+  RejoiceDevOps1Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: rejoice_devops1
+
+
